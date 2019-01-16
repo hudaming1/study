@@ -2,14 +2,16 @@ package org.hum.study.datastruct.stack;
 
 public class StackUtils {
 	
-	static interface Stack<T> {
+	public static interface Stack<T> {
 		public void push(T t);
 		public T pop();
 		public boolean isEmpty();
+		public T poll();
 	}
 
-	// 线性栈（基于数组实现）
-	static class ArrStack<T> implements Stack<T> {
+	// 线型栈（基于数组实现）
+	@SuppressWarnings("unchecked")
+	public static class ArrStack<T> implements Stack<T> {
 		private final int DEFAULT_SIZE = 16;
 		private Object [] arr;
 		private int cursor;
@@ -27,7 +29,6 @@ public class StackUtils {
 			arr[cursor ++] = val;
 		}
 		
-		@SuppressWarnings("unchecked")
 		public T pop() {
 			cursor --;
 			T val = (T) arr[cursor];
@@ -38,10 +39,15 @@ public class StackUtils {
 		public boolean isEmpty() {
 			return cursor == 0;
 		}
+
+		@Override
+		public T poll() {
+			return (T) arr[cursor];
+		}
 	}
 	
 	// 链式栈（基于链表实现）
-	static class LinkedStack<T> implements Stack<T> {
+	public static class LinkedStack<T> implements Stack<T> {
 		
 		static class Node<T> {
 			public T data;
@@ -90,6 +96,14 @@ public class StackUtils {
 		@Override
 		public boolean isEmpty() {
 			return header == null;
+		}
+
+		@Override
+		public T poll() {
+			if (header == null) {
+				throw new NullPointerException("linkedlist is null");
+			}
+			return header.data;
 		}
 	}
 	
