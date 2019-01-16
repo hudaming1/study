@@ -19,6 +19,11 @@ public class StackUtils {
 		}
 		
 		public void push(T val) {
+			if (cursor >= arr.length) {
+				Object[] newArr = new Object[arr.length * 2];
+				System.arraycopy(arr, 0, newArr, 0, arr.length);
+				arr = newArr;
+			}
 			arr[cursor ++] = val;
 		}
 		
@@ -37,28 +42,60 @@ public class StackUtils {
 	
 	// 链式栈（基于链表实现）
 	static class LinkedStack<T> implements Stack<T> {
+		
+		static class Node<T> {
+			public T data;
+			public Node<T> prev;
+			public Node<T> next;
+			public Node(T data, Node<T> prev, Node<T> next) {
+				this.data = data;
+				this.prev = prev;
+				this.next = next;
+			}
+		}
+		
+		private Node<T> header;
 
 		@Override
 		public void push(T t) {
-			// TODO Auto-generated method stub
+			if (t == null) {
+				throw new IllegalArgumentException("data mustn't be null");
+			} else if (header == null) {
+				header = new Node<>(t, header, null);
+				return ;
+			}
+			
+			Node<T> node = new Node<>(t, null, header);
+			header.prev = node;
+			header = node;
 		}
 
 		@Override
 		public T pop() {
-			// TODO Auto-generated method stub
-			return null;
+			if (header == null) {
+				throw new IndexOutOfBoundsException();
+			}
+			
+			Node<T> node = header;
+			if (node.next != null) {
+				node.next.prev = null;
+				header = node.next;
+			} else {
+				header = null;
+			}
+			
+			return node.data;
 		}
 
 		@Override
 		public boolean isEmpty() {
-			// TODO Auto-generated method stub
-			return false;
+			return header == null;
 		}
 	}
 	
 	public static void main(String[] args) {
-		ArrStack<Integer> stack = new ArrStack<>();
-		for (int i = 1; i <= 10; i++) {
+		Stack<Integer> stack = new ArrStack<>();
+		for (int i = 1; i <= 100; i++) {
 			stack.push(i);
 		}
 		
