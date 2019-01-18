@@ -9,7 +9,7 @@ import org.hum.study.datastruct.stack.StackUtils.Stack;
 public class 表达式运算优先级 {
 	
 	private static final Pattern NumberPattern = Pattern.compile("[0-9]");
-	private static final Pattern OpPattern = Pattern.compile("[+-\\*]");
+	private static final Pattern OpPattern = Pattern.compile("[+-[\\*][\\/]]");
 
 	static enum Op {
 		Plus('+', 10), Minus('-', 10), Multiply('*', 20), Devide('/', 20);
@@ -47,8 +47,13 @@ public class 表达式运算优先级 {
 			// 匹配到数字
 			if (NumberPattern.matcher(String.valueOf(ch)).matches()) {
 				
-			} 
+			}
 			// 匹配到符号
+			else if (OpPattern.matcher(String.valueOf(ch)).matches()) {
+				
+			} else {
+				throw new IllegalArgumentException("unknown charset[" + ch + "] ");
+			}
 		}
 		return null;
 	}
