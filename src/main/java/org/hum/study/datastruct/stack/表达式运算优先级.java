@@ -180,6 +180,8 @@ public class 表达式运算优先级 {
 		System.out.println("1+2*(3+1)=" + calc("1+2*(3+1)"));
 		System.out.println("1*2+(3+1)=" + calc("1*2+(3+1)"));
 		System.out.println("1+2*(3+1)*4/2=" + calc("1+2*(3+1)*4/2"));
+		System.out.println("1+(2*(3+4)+5)+6*7=" + calc("1+(2*(3+4)+5)+6*7"));
+		System.out.println("1+2*((3+4)*5)+6*7=" + calc("1+2*((3+4)*5)+6*7"));
 		
 		
 	}
