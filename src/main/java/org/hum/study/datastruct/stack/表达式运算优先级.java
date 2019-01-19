@@ -7,7 +7,9 @@ import org.hum.study.datastruct.stack.StackUtils.Stack;
 
 public class 表达式运算优先级 {
 	
-	private static final Pattern NumberPattern = Pattern.compile("[0-9]");
+	// 匹配数字和小数点
+	private static final Pattern NumberPattern = Pattern.compile("[0-9[\\.]]");
+	// 匹配运算符
 	private static final Pattern OpPattern = Pattern.compile("[+-[\\*][\\/]]");
 
 	static enum Op {
@@ -46,6 +48,7 @@ public class 表达式运算优先级 {
 	
 	/**
 	 * <pre>
+	 * 	1+1*2.2
 	 * 	1+1*2
 	 * 	3*4+2/2
 	 * 	13*12-19
@@ -120,10 +123,10 @@ public class 表达式运算优先级 {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(calc("12+1"));
+		System.out.println(calc("1.2+1.12"));
 		System.out.println(calc("3+2+3+2+2+1"));
 		System.out.println(calc("1+1"));
-		System.out.println(calc("1+1+2*3"));
+		System.out.println(calc("1+1+2.3*3"));
 		System.out.println(calc("1+2*3"));
 		System.out.println(calc("1+2*3-1"));
 		System.out.println(calc("1+2*3*2"));
