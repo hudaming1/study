@@ -60,25 +60,23 @@ public class 表达式运算优先级 {
 			throw new IllegalArgumentException("expresion mustn't be null");
 		}
 		
-		StringBuilder numBuilder = new StringBuilder();
+		StringBuilder numTemp = new StringBuilder(); // 用户临时存储多位数字
 		Stack<BigDecimal> numberStack = new StackUtils.ArrStack<>();
 		Stack<Op> opStack = new StackUtils.ArrStack<>();
 		
+		/** 1.将操作数和运算符入栈 **/
 		for (char ch : expresion.toCharArray()) {
 			// 匹配到数字
 			if (NumberPattern.matcher(String.valueOf(ch)).matches()) {
-				numBuilder.append(ch);
+				numTemp.append(ch);
 			}
 			// 匹配到符号
 			else if (OpPattern.matcher(String.valueOf(ch)).matches()) {
-				numberStack.push(new BigDecimal(numBuilder.toString()));
-				numBuilder = new StringBuilder();
-				if (opStack.isEmpty()) {
-					opStack.push(Op.getEnum(ch));
-					continue;
-				}
+				// 遇到操作符，则将前几位的字符拼成一个数字压入栈
+				numberStack.push(new BigDecimal(numTemp.toString()));
+				numTemp = new StringBuilder();
 				// 如果栈内已经存在运算符，则需要判断是否需要进行计算
-				if (opStack.poll().priority < Op.getEnum(ch).priority) {
+				if (opStack.isEmpty() || opStack.poll().priority < Op.getEnum(ch).priority) {
 					opStack.push(Op.getEnum(ch));
 					continue;
 				}
@@ -93,12 +91,13 @@ public class 表达式运算优先级 {
 			}
 		}
 		
-		// 最后肯定是要以数字结尾
-		if (numBuilder.length() == 0) {
+		/** 2.最后肯定是要以数字结尾 **/
+		if (numTemp.length() == 0) {
 			throw new IllegalArgumentException("expresion(" + expresion + ") is invaild");
 		}
-		numberStack.push(new BigDecimal(numBuilder.toString()));
+		numberStack.push(new BigDecimal(numTemp.toString()));
 		
+		/** 3.反向弹出操作数，开始进行计算 **/
 		while (!opStack.isEmpty()) {
 			Op op = opStack.pop();
 			
@@ -112,6 +111,7 @@ public class 表达式运算优先级 {
 			numberStack.push(op.calc(num1, num2));
 		}
 		
+		// 最后一次校验
 		if (numberStack.size() != 1) {
 			throw new IllegalArgumentException("expresion(" + expresion + ") is invaild");
 		}
