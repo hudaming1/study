@@ -90,8 +90,8 @@ public class 表达式运算优先级 {
 		}
 		
 		StringBuilder numTemp = new StringBuilder(); // 用户临时存储多位数字
-		Stack<BigDecimal> numberStack = new StackUtils.ArrStack<>();
-		Stack<Object> opStack = new StackUtils.ArrStack<>();
+		Stack<BigDecimal> numberStack = new StackUtils.LinkedStack<>();
+		Stack<Object> opStack = new StackUtils.LinkedStack<>();
 		
 		/** 1.将操作数和运算符入栈 **/
 		for (char ch : expresion.toCharArray()) {
@@ -181,7 +181,7 @@ public class 表达式运算优先级 {
 		System.out.println("1*2+(3+1)=" + calc("1*2+(3+1)"));
 		System.out.println("1+2*(3+1)*4/2=" + calc("1+2*(3+1)*4/2"));
 		System.out.println("1+(2*(3+4)+5)+6*7=" + calc("1+(2*(3+4)+5)+6*7"));
-		System.out.println("1+2*((3+4)*5)+6*7=" + calc("1+2*((3+4)*5)+6*7"));
+		System.out.println("1+2*((3+4.2)*3)+6*7/3=" + calc("1+2*((3+4.2)*3)+6*7/3"));
 		
 		
 	}

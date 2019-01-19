@@ -114,12 +114,12 @@ public class StackUtils {
 
 		@Override
 		public boolean isEmpty() {
-			return header == null;
+			return len == 0;
 		}
 
 		@Override
 		public T poll() {
-			if (header == null) {
+			if (len == 0) {
 				throw new NullPointerException("linkedlist is null");
 			}
 			return header.data;
