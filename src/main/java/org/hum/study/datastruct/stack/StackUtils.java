@@ -85,6 +85,7 @@ public class StackUtils {
 				throw new IllegalArgumentException("data mustn't be null");
 			} else if (header == null) {
 				header = new Node<>(t, header, null);
+				len ++;
 				return ;
 			}
 			
