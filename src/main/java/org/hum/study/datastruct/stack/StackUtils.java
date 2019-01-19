@@ -1,5 +1,7 @@
 package org.hum.study.datastruct.stack;
 
+import java.util.Arrays;
+
 public class StackUtils {
 	
 	public static interface Stack<T> {
@@ -7,6 +9,7 @@ public class StackUtils {
 		public T pop();
 		public boolean isEmpty();
 		public T poll();
+		public int size();
 	}
 
 	// 线型栈（基于数组实现）
@@ -42,7 +45,20 @@ public class StackUtils {
 
 		@Override
 		public T poll() {
-			return (T) arr[cursor];
+			return (T) arr[cursor - 1];
+		}
+
+		@Override
+		public int size() {
+			return cursor;
+		}
+		
+		@Override
+		public String toString() {
+			if (isEmpty()) {
+				return "[]";
+			}
+			return Arrays.toString(arr);
 		}
 	}
 	
@@ -61,6 +77,7 @@ public class StackUtils {
 		}
 		
 		private Node<T> header;
+		private int len;
 
 		@Override
 		public void push(T t) {
@@ -74,6 +91,7 @@ public class StackUtils {
 			Node<T> node = new Node<>(t, null, header);
 			header.prev = node;
 			header = node;
+			len ++;
 		}
 
 		@Override
@@ -90,6 +108,7 @@ public class StackUtils {
 				header = null;
 			}
 			
+			len --;
 			return node.data;
 		}
 
@@ -104,6 +123,11 @@ public class StackUtils {
 				throw new NullPointerException("linkedlist is null");
 			}
 			return header.data;
+		}
+
+		@Override
+		public int size() {
+			return len;
 		}
 	}
 	
