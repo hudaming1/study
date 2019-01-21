@@ -79,16 +79,39 @@ public class BinaryTreeUtils {
 			}
 		}
 		
+		// 递归方式查找最大值
+		@SuppressWarnings("unchecked")
+		public T getMaxValue(TreeNode<T> node) {
+			if (node == null) {
+				throw new NullPointerException("node is null?");
+			} else if (node.data != null && node.left == null && node.right == null) {
+				return node.data;
+			}
+			Comparable<T> max = (Comparable<T>) node.data;
+			Comparable<T> leftData = (Comparable<T>) getMaxValue(node.left);
+			Comparable<T> rightData = (Comparable<T>) getMaxValue(node.right);
+			if (max.compareTo((T) leftData) < 0) {
+				return leftData.compareTo((T) rightData) < 0 ? (T) rightData : (T) leftData;
+			} else {
+				return max.compareTo((T) rightData) < 0 ? (T) rightData : (T) max;
+			}
+		}
+		
+		public T getMaxValue() {
+			return getMaxValue(root);
+		}
+		
 		public static BinaryTree<Integer> createSimple() {
 			BinaryTree<Integer> tree = new BinaryTree<Integer>();
 			TreeNode<Integer> node2 = new TreeNode<Integer>(2, new TreeNode<Integer>(4, null, null), new TreeNode<Integer>(5, null, null));
 			TreeNode<Integer> node3 = new TreeNode<Integer>(3, new TreeNode<Integer>(6, null, null), new TreeNode<Integer>(7, null, null));
-			tree.root = new TreeNode<Integer>(1, node2, node3);
+			tree.root = new TreeNode<Integer>(11, node2, node3);
 			return tree;
 		}
 	}
 	
 	public static void main(String[] args) {
-		BinaryTree.createSimple().levelOrder();
+		// BinaryTree.createSimple().levelOrder();
+		System.out.println(BinaryTree.createSimple().getMaxValue());
 	}
 }
