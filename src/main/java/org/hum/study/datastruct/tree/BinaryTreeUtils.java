@@ -1,8 +1,6 @@
 package org.hum.study.datastruct.tree;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import org.hum.study.datastruct.stack.StackUtils;
@@ -19,6 +17,11 @@ public class BinaryTreeUtils {
 			this.data = data;
 			this.left = left;
 			this.right = right;
+		}
+		
+		@Override
+		public String toString() {
+			return "[TreeNode data=" + data + "]";
 		}
 	}
 	
@@ -77,15 +80,15 @@ public class BinaryTreeUtils {
 		
 		// 递归方式查找最大值
 		@SuppressWarnings("unchecked")
-		public T getMaxValue(TreeNode<T> node) {
+		public T findMaxValue(TreeNode<T> node) {
 			if (node == null || node.data == null) {
 				return null;
 			} else if (node.data != null && node.left == null && node.right == null) {
 				return node.data;
 			}
 			Comparable<T> max = (Comparable<T>) node.data;
-			Comparable<T> leftData = (Comparable<T>) getMaxValue(node.left);
-			Comparable<T> rightData = (Comparable<T>) getMaxValue(node.right);
+			Comparable<T> leftData = (Comparable<T>) findMaxValue(node.left);
+			Comparable<T> rightData = (Comparable<T>) findMaxValue(node.right);
 			
 			if (leftData == null && rightData != null) {
 				return max.compareTo((T) rightData) < 0 ? (T) rightData : (T) max;
@@ -102,8 +105,48 @@ public class BinaryTreeUtils {
 			}
 		}
 		
-		public T getMaxValue() {
-			return getMaxValue(root);
+		public T findMaxValue() {
+			return findMaxValue(root);
+		}
+		
+		// 找到目标值(栈寻找)
+		public TreeNode<T> findValue(T t) {
+			if (t == null) {
+				throw new IllegalArgumentException("param mustn't be null");
+			}
+			
+			Stack<TreeNode<T>> stack = new StackUtils.ArrStack<>();
+			stack.push(root);
+			
+			while (!stack.isEmpty()) {
+				TreeNode<T> node = stack.pop();
+				if (node.data.equals(t)) {
+					return node;
+				}
+				if (node.left != null) {
+					stack.push(node.left);
+				}
+				if (node.right != null) {
+					stack.push(node.right);
+				}
+			}
+			
+			return null;
+		}
+		
+		/**
+		 * 获得data到Root的节点路径
+		 * @param data
+		 * @return
+		 */
+		public static <T> Stack<T> findRootPath(T data) {
+			
+			return null;
+		}
+		
+		public static <T> TreeNode<T> findLCA(T data1, T data2) {
+			
+			return null;
 		}
 		
 		public static BinaryTree<Integer> createSimple() {
@@ -118,6 +161,6 @@ public class BinaryTreeUtils {
 	
 	public static void main(String[] args) {
 		// BinaryTree.createSimple().levelOrder();
-		System.out.println(BinaryTree.createSimple().getMaxValue());
+		System.out.println(BinaryTree.createSimple().findValue(31));
 	}
 }
