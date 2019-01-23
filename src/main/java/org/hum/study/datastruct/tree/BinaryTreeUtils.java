@@ -227,22 +227,79 @@ public class BinaryTreeUtils {
 			return null;
 		}
 		
-		// 判断是否是满二叉树
-		public boolean isFullBinaryTree() {
+		// 判断是否是严格二叉树(儿女节点双全)
+		public boolean isStrictBinaryTree() {
+			if (root == null) {
+				return false;
+			}
+			Stack<TreeNode<T>> stack = new StackUtils.LinkedStack<>();
+			stack.push(root);
+			while (!stack.isEmpty()) {
+				TreeNode<T> node = stack.pop();
+				if ((node.left == null && node.right != null) || (node.left != null && node.right == null)) {
+					return false;
+				}
+				if (node.left != null) {
+					stack.push(node.left);
+				}
+				if (node.right != null) {
+					stack.push(node.right);
+				}
+			}
+			return true;
+		}
+		
+		public boolean isStrictBinaryTree(TreeNode<T> node) {
+			if (node == null) {
+				return false;
+			}
+			if (node.left != null && node.right != null) {
+				if (!isStrictBinaryTree(node.left)) {
+					return false;
+				}
+				return isStrictBinaryTree(node.right);
+			} else if (node.left == null && node.right == null) {
+				return true;
+			} else if ((node.left == null && node.right != null) || (node.left != null && node.right == null)){
+				return false;
+			} else {
+				throw new RuntimeException("unreachable code!");
+			}
+		}
+		
+		// 判断是否是完全二叉树(只允许最后一层有空缺结点且空缺在右边，即叶子结点只能在层次最大的两层上出现；对任一结点，如果其右子树的深度为j，则其左子树的深度必为j或j+1 即度为1的点只有1个或0个)
+		public boolean isCompleteBinaryTree() {
 			// TODO
 			return false;
 		}
-		
-		// 判断是否是完全二叉树
-		public boolean isCompleteBinaryTree() {
+
+		// 判断是否是满二叉树(正三角形树)
+		public boolean isFullBinaryTree() {
 			// TODO
 			return false;
 		}
 		
 		// 统计出叶子节点数量
 		public int getLeafCount() {
-			// TODO
-			return 0;
+			if (root == null) {
+				return 0;
+			}
+			int leafCount = 0;
+			Stack<TreeNode<T>> stack = new StackUtils.LinkedStack<>();
+			stack.push(root);
+			while (!stack.isEmpty()) {
+				TreeNode<T> node = stack.pop();
+				if (node != null && node.data != null) {
+					leafCount ++;
+				}
+				if (node.left != null) {
+					stack.push(node.left);
+				}
+				if (node.right != null) {
+					stack.push(node.right);
+				}
+			}
+			return leafCount;
 		}
 		
 		// 统计出满叶子节点数量
@@ -286,7 +343,7 @@ public class BinaryTreeUtils {
 			BinaryTree<Integer> tree = new BinaryTree<Integer>();
 			TreeNode<Integer> node2 = new TreeNode<Integer>(2, new TreeNode<Integer>(4, null, null), new TreeNode<Integer>(5, null, new TreeNode<>(8)));
 //			TreeNode<Integer> node2 = new TreeNode<Integer>(2, new TreeNode<Integer>(4, null, null), null);
-			TreeNode<Integer> node3 = new TreeNode<Integer>(3, new TreeNode<Integer>(6, null, null), new TreeNode<Integer>(7, null, null));
+			TreeNode<Integer> node3 = new TreeNode<Integer>(3, new TreeNode<Integer>(6, null, null), new TreeNode<Integer>(7, new TreeNode<>(92), new TreeNode<>(9)));
 			tree.root = new TreeNode<Integer>(1, node2, node3);
 			return tree;
 		}
@@ -315,5 +372,9 @@ public class BinaryTreeUtils {
 //		System.out.println(simpleTree.getTreeHeiht());
 //		System.out.println(simpleTree.findRootPath(8));
 //		System.out.println(simpleTree.findLCA(8, 6));
+//		System.out.println(simpleTree.getLeafCount());
+//		System.out.println(simpleTree.isStrictBinaryTree());
+//		System.out.println(simpleTree.isStrictBinaryTree(simpleTree.root));
+		System.out.println(simpleTree.isFullBinaryTree());
 	}
 }
