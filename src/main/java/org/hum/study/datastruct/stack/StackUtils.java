@@ -130,6 +130,19 @@ public class StackUtils {
 		public int size() {
 			return len;
 		}
+		
+		@Override
+		public String toString() {
+			StringBuilder sbuilder = new StringBuilder("[");
+			while (!isEmpty()) {
+				sbuilder.append(pop()).append(", ");
+			}
+			if (sbuilder.length() > 1) {
+				sbuilder = sbuilder.delete(0, sbuilder.length() - 2);
+			}
+			sbuilder.append("]");
+			return sbuilder.toString();
+		}
 	}
 	
 	public static void main(String[] args) {

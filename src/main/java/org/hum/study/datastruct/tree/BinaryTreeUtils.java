@@ -13,6 +13,7 @@ public class BinaryTreeUtils {
 		public TreeNode<T> left;
 		public TreeNode<T> right;
 		public TreeNode() { }
+		public TreeNode(T data) { this.data = data; }
 		public TreeNode(T data, TreeNode<T> left, TreeNode<T> right) {
 			this.data = data;
 			this.left = left;
@@ -134,21 +135,90 @@ public class BinaryTreeUtils {
 		}
 		
 		// 获得data到Root的节点路径
-		public Stack<T> findRootPath(T data) {
-			// TODO
+		public Stack<TreeNode<T>> findRootPath(T data) {
+			Stack<TreeNode<T>> stack = new StackUtils.ArrStack<>();
+			if (root == null || root.data == null) {
+				return stack;
+			} else if (root.data.equals(data)) {
+				stack.push(root);
+				return stack;
+			}
+			TreeNode<T> node = findRootPath(stack, root, data);
+			if (node != null) {
+				stack.push(node);
+			}
+			return stack;
+		}
+		
+		private TreeNode<T> findRootPath(Stack<TreeNode<T>> stack, TreeNode<T> node, T data) {
+			if (node == null || node.data == null) {
+				return null;
+			}
+			if (node.data.equals(data)) {
+				return node;
+			}
+			
+			if (node.left != null) {
+				TreeNode<T> n = findRootPath(stack, node.left, data);
+				if (n != null) {
+					stack.push(n);
+					return node;
+				}
+			}
+
+			if (node.right != null) {
+				TreeNode<T> n = findRootPath(stack, node.right, data);
+				if (n != null) {
+					stack.push(n);
+					return node;
+				}
+			}
+			
 			return null;
 		}
 
 		// 找到公共祖先
 		public TreeNode<T> findLCA(T data1, T data2) {
-			// TODO
-			return null;
+			Stack<TreeNode<T>> stack1 = findRootPath(data1);
+			if (stack1.isEmpty()) {
+				throw new RuntimeException("data[" + data1 + "] not exists in tree.");
+			}
+			Stack<TreeNode<T>> stack2 = findRootPath(data2);
+			if (stack2.isEmpty()) {
+				throw new RuntimeException("data[" + data2 + "] not exists in tree.");
+			}
+			TreeNode<T> node = root;
+			while (!stack1.isEmpty() && !stack2.isEmpty()) {
+				TreeNode<T> node1 = stack1.pop();
+				TreeNode<T> node2 = stack2.pop();
+				if (node1 != node2) {
+					return node;
+				}
+				node = node1;
+			}
+			return node;
 		}
 		
 		// 统计数的高度
 		public int getTreeHeiht() {
-			// TODO
-			return 0;
+			if (root == null) {
+				return 0;
+			}
+			return getTreeHeight(root, 1);
+		}
+		
+		private int getTreeHeight(TreeNode<T> node, int height) {
+			if (node == null || (node.left == null && node.right == null)) {
+				return height;
+			}
+			int leftHeight = 0, rightHeight = 0;
+			if (node.left != null) {
+				leftHeight = getTreeHeight(node.left, height + 1);
+			}
+			if (node.right != null) {
+				rightHeight = getTreeHeight(node.right, height + 1);
+			}
+			return leftHeight > rightHeight ? leftHeight : rightHeight;
 		}
 		
 		// 生成镜像树
@@ -214,7 +284,7 @@ public class BinaryTreeUtils {
 		// 构建简单二叉树
 		public static BinaryTree<Integer> buildSimpleTree() {
 			BinaryTree<Integer> tree = new BinaryTree<Integer>();
-			TreeNode<Integer> node2 = new TreeNode<Integer>(2, new TreeNode<Integer>(4, null, null), new TreeNode<Integer>(5, null, null));
+			TreeNode<Integer> node2 = new TreeNode<Integer>(2, new TreeNode<Integer>(4, null, null), new TreeNode<Integer>(5, null, new TreeNode<>(8)));
 //			TreeNode<Integer> node2 = new TreeNode<Integer>(2, new TreeNode<Integer>(4, null, null), null);
 			TreeNode<Integer> node3 = new TreeNode<Integer>(3, new TreeNode<Integer>(6, null, null), new TreeNode<Integer>(7, null, null));
 			tree.root = new TreeNode<Integer>(1, node2, node3);
@@ -239,7 +309,11 @@ public class BinaryTreeUtils {
 	}
 	
 	public static void main(String[] args) {
-		// BinaryTree.createSimple().levelOrder();
-		System.out.println(BinaryTree.buildSimpleTree().findValue(31));
+		BinaryTree<Integer> simpleTree = BinaryTree.buildSimpleTree();
+//		simpleTree.levelOrder();
+//		System.out.println(BinaryTree.buildSimpleTree().findValue(31));
+//		System.out.println(simpleTree.getTreeHeiht());
+//		System.out.println(simpleTree.findRootPath(8));
+//		System.out.println(simpleTree.findLCA(8, 6));
 	}
 }
