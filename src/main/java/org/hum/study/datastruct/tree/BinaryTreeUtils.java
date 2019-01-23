@@ -327,12 +327,6 @@ public class BinaryTreeUtils {
 			return 0;
 		}
 		
-		// 打印出某节点的所有祖先节点
-		public Stack<TreeNode<T>> getAllAncestors(TreeNode<T> node) {
-			// TODO
-			return null;
-		}
-		
 		// Zigzag遍历
 		public void printZigzag() {
 			// TODO
