@@ -2,9 +2,10 @@ package org.hum.study.datastruct.tree;
 
 public class AVLTreeUtils {
 
+
     /**
      * <pre>
-     *	AVL-Tree插入流程：
+     *	插入流程：
      *	 1.判断新节点插入位置：如果new_value小于current_node，则插入左子节点；反之插入到右子节点
      *	 2.递归查找到叶子节点，并插入新的节点
      *	 3.判断整棵Tree是否平衡，如不平衡则开始递归进行旋转
@@ -35,10 +36,9 @@ public class AVLTreeUtils {
      * 	关于旋转：
      * 	  LL：左升根，根降右(var newRoot = node.left; node.left = newRoot.right; newRoot.right = node;)
      * 	  RR：右升根，根降左(var newRoot = node.right; node.right = newRoot.left; newRoot.left = node;)
+     * 	  LR：右旋左子，左选自己(node.left = RR(node.left); node = LL(node);)
+     * 	  RL：左选右子，右旋自己(node.right = LL(node.right); node = RR(node);)
      * </pre>
-     * @param node
-     * @param value
-     * @return 
      */
 	static class AVLTree<T> {
 		public TreeNode<T> root;
