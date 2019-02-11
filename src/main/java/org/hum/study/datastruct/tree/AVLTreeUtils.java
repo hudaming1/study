@@ -4,6 +4,13 @@ public class AVLTreeUtils {
 
     /**
      * <pre>
+     *	AVL-Tree插入流程：
+     *	 1.判断新节点插入位置：如果new_value小于current_node，则插入左子节点；反之插入到右子节点
+     *	 2.递归查找到叶子节点，并插入新的节点
+     *	 3.判断整棵Tree是否平衡，如不平衡则开始递归进行旋转
+     *	 4.递归计算节点的高度
+     * </pre>
+     * <pre>
      * 	单侧旋转：
      * 	  LL（新插入节点val-12）		RR（新插入节点val-180）
      *      		100							100
@@ -24,6 +31,14 @@ public class AVLTreeUtils {
      *     			80					   110		 
      *   		
      * </pre>
+     * <pre>
+     * 	关于旋转：
+     * 	  LL：左升根，根降右(var newRoot = node.left; node.left = newRoot.right; newRoot.right = node;)
+     * 	  RR：右升根，根降左(var newRoot = node.right; node.right = newRoot.left; newRoot.left = node;)
+     * </pre>
+     * @param node
+     * @param value
+     * @return 
      */
 	static class AVLTree<T> {
 		public TreeNode<T> root;
