@@ -4,6 +4,8 @@ public class AVLTreeUtils {
 
 
     /**
+     * AVL树：
+     * 	高度平衡树，每次增减节点后，根据高度来判断是否平衡，在失衡时通过自转（LL、RR、LR和RL）来重新达到平衡。
      * <pre>
      *	插入流程：
      *	 1.判断新节点插入位置：如果new_value小于current_node，则插入左子节点；反之插入到右子节点
@@ -30,7 +32,6 @@ public class AVLTreeUtils {
      *      30   70							 120	  160
      *     		   \							 /		 
      *     			80					   110		 
-     *   		
      * </pre>
      * <pre>
      * 	关于旋转：
