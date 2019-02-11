@@ -8,24 +8,6 @@ import org.hum.study.datastruct.stack.StackUtils.Stack;
 
 public class BinaryTreeUtils {
 
-	static class TreeNode<T> {
-		public T data;
-		public TreeNode<T> left;
-		public TreeNode<T> right;
-		public TreeNode() { }
-		public TreeNode(T data) { this.data = data; }
-		public TreeNode(T data, TreeNode<T> left, TreeNode<T> right) {
-			this.data = data;
-			this.left = left;
-			this.right = right;
-		}
-		
-		@Override
-		public String toString() {
-			return "[TreeNode data=" + data + "]";
-		}
-	}
-	
 	static class BinaryTree<T> {
 		public TreeNode<T> root;
 		
