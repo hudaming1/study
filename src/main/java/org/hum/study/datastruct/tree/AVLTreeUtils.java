@@ -2,7 +2,6 @@ package org.hum.study.datastruct.tree;
 
 public class AVLTreeUtils {
 
-
     /**
      * AVL树：
      * 	高度平衡树，每次增减节点后，根据高度来判断是否平衡，在失衡时通过自转（LL、RR、LR和RL）来重新达到平衡。
@@ -15,19 +14,19 @@ public class AVLTreeUtils {
      * </pre>
      * <pre>
      * 	单侧旋转：
-     * 	  LL（新插入节点val-12）		
+     * 	  RR（新插入节点val-12）		
      *      		100						 50
      *	    	   /   \						/  \	
      *		  50   140				   30  100
-     *		 /  \		 ----LL--->	  /    /  \
+     *		 /  \		 ----RR--->	  /    /  \
      *      30   70					 12   70  140
      *     /									
      *    12									
-     *   RR（新插入节点val-180）
+     *   LL（新插入节点val-180）
      *   		100						 140					
      *   	   /   \						/   \
      *   	  50	   140				   100  160
-     *  	     	   /  \	  ----RR--->	  /   \     \
+     *  	     	   /  \	  ----LL--->	  /   \     \
      *  	   		 120  160			 50   120   180
      *  					 \
      *  		 			 180
@@ -36,7 +35,7 @@ public class AVLTreeUtils {
      *       	100						 100						 70
      *	    	   /   \						/   \					/  \
      *		  50   140				   70   140				   50  100			
-     *		 /  \		 ----RR--->	  /  \ 		 ----LL--->	  /    /  \ 
+     *		 /  \		 ----LL--->	  /  \ 		 ----RR--->	  /    /  \ 
      *      30   70					 50   80					 30   80  140
      *     		   \					/						
      *     			80			   30					   
@@ -44,15 +43,15 @@ public class AVLTreeUtils {
      *    		100						 100						 120 
      *    	   /   \						/   \					/   \
      *    	  50	   140				   50   120				   100   140
-     *    		   /  \	  ----LL--->	  		/  \  ----RR--->	  /   \    \
+     *    		   /  \	  ----RR--->	  		/  \  ----LL--->	  /   \    \
      *    		 120	  160			 	  110  140			 50   110  160
      *    		 /						  		  \	
      *    	   110			   	   				  160
      * </pre>
      * <pre>
      * 	关于旋转：
-     * 	  LL：左升根，根降右(var newRoot = node.left; node.left = newRoot.right; newRoot.right = node;)
-     * 	  RR：右升根，根降左(var newRoot = node.right; node.right = newRoot.left; newRoot.left = node;)
+     * 	  LL：右升根，根降左(var newRoot = node.right; node.right = newRoot.left; newRoot.left = node;)
+     * 	  RR：左升根，根降右(var newRoot = node.left; node.left = newRoot.right; newRoot.right = node;)
      * 	  LR：右旋左子，左选自己(node.left = RR(node.left); node = LL(node);)
      * 	  RL：左选右子，右旋自己(node.right = LL(node.right); node = RR(node);)
      * </pre>
@@ -66,6 +65,10 @@ public class AVLTreeUtils {
 		
 		public void delete(T data) {
 			
+		}
+		
+		public TreeNode<T> find(T data) {
+			return null;
 		}
 		
 		public void print() {
