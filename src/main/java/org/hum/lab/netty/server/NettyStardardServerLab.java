@@ -1,4 +1,4 @@
-package org.hum.lab.netty;
+package org.hum.lab.netty.server;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ public class NettyStardardServerLab extends ChannelInboundHandlerAdapter {
 	}
 
 	public static void main(String[] args) throws InterruptedException, IOException {
-		NettyServerFactory.create(new NettyStardardServerLab());
+		NettyServerFactory.start(10086, new NettyStardardServerLab());
 		System.out.println("1111");
 		System.in.read();
 	}

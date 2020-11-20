@@ -10,7 +10,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class NettyServerFactory {
 	
-	public static ChannelFuture create(ChannelHandler... handlers) throws InterruptedException {
+	public static ChannelFuture start(int port, ChannelHandler... handlers) throws InterruptedException {
 		ServerBootstrap bootstrap = new ServerBootstrap();
 		NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
 		NioEventLoopGroup workerGroup = new NioEventLoopGroup(4);
@@ -22,7 +22,7 @@ public class NettyServerFactory {
 				ch.pipeline().addLast(handlers);
 			}
 		});
-		ChannelFuture future = bootstrap.bind(10086);
+		ChannelFuture future = bootstrap.bind(port);
 		future.addListener(f -> {
 			if (f.isSuccess()) {
 				System.out.println("server started;");

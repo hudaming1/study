@@ -1,4 +1,4 @@
-package org.hum.lab.netty;
+package org.hum.lab.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

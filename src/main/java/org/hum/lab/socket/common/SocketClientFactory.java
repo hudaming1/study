@@ -7,9 +7,16 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SocketClient {
+public class SocketClientFactory {
+	
+	public static void sendOnce(String host, int port, byte[] bytes) throws UnknownHostException, IOException {
+		Socket socket = new Socket(host, port);
+		socket.getOutputStream().write(bytes);
+		socket.getOutputStream().flush();
+		socket.close();
+	}
 
-	public static byte[] sendOnce(String host, int port, byte[] bytes) throws UnknownHostException, IOException {
+	public static byte[] sendOnceAndReceive(String host, int port, byte[] bytes) throws UnknownHostException, IOException {
 		Socket socket = new Socket(host, port);
 		socket.getOutputStream().write(bytes);
 		socket.getOutputStream().flush();
