@@ -9,7 +9,7 @@ import org.hum.lab.util.ByteUtils;
 public class SocketStickyClientTest {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
-		SocketClientFactory.sendOnce("localhost", 10086, ByteUtils.genNumberCharArray(1024));
+		SocketClientFactory.sendOnce("localhost", 10086, ByteUtils.genNumberCharArray(165530));
 		System.out.println("over");
 	}
 }

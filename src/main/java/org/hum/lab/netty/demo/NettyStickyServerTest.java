@@ -12,9 +12,10 @@ public class NettyStickyServerTest extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		ByteBuf byteBuf = (ByteBuf) msg;
-		byte[] bytes = new byte[byteBuf.readableBytes()];
+		int len = byteBuf.readableBytes();
+		byte[] bytes = new byte[len];
 		byteBuf.readBytes(bytes);
-		System.out.println(new String(bytes));
+		System.out.println("read length(" + len + "), bytes=" + new String(bytes));
 		ctx.fireChannelRead(msg);
 	}
 
