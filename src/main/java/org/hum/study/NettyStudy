@@ -1,0 +1,108 @@
+package io.netty.test;
+
+import java.lang.reflect.Field;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.ReferenceCountUtil;
+import io.netty.util.internal.PlatformDependent;
+
+/**
+ * 背景：
+ *   项目中在使用Netty作为服务端处理程序Read时，在有请求进入时会调用<code>NioByteUnsafe.read()</code>，该方法会导致堆外内存增加，且即便在客户端断开连接后也一直没有释放，最终直到堆外内存溢出。
+ *   在分配内存时，会调用<code>PlatformDependent.allocateDirectNoCleaner();</code>方法，观察名称可以猜测通过这个方法分配的内存不会自动释放，需要手动管理(调用<code>PlatformDependent.freeDirectNoCleaner</code>)
+ * 代码实现：
+ *    1.启动服务，监听2222端口，并启动后台进程来监听「堆外内存」和「堆内内存」使用情况
+ *    2.一个简单HTTP服务器：能够读取标准HTTP请求，并输出一段HTTP响应。
+ * 测试流程：
+ *    1.使用无参数启动，对堆外内存没有限制
+ *      ① 刚启动时控制台打印：堆外内存使用0，堆内使用256M
+ *      ② 用浏览器请求 http://localhost:2222/index.html，页面返回「1234566789」，反复10次观察内存使用情况：直接内存60M，heap仍然是256M
+ *      ③ 写了一段程序，传输512M数据，堆内内存上涨至450M，1秒后又下降400M，说明本次请求是在堆上进行了内存分配
+ *    2.使用-XX:MaxDirectMemorySize=150M启动，限制堆外内存使用在150M以内
+ */
+public class NettyStudy {
+
+	/**
+	 * -XX:MaxDirectMemorySize=150M
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		
+		printDirectMemorySize();
+		
+		ServerBootstrap serverBootstrap = new ServerBootstrap();
+		serverBootstrap.channel(NioServerSocketChannel.class);
+		serverBootstrap.group(new NioEventLoopGroup(1), new NioEventLoopGroup(4));
+		serverBootstrap.childHandler(new ChannelInitializer<Channel>() {
+			@Override
+			protected void initChannel(Channel ch) throws Exception {
+				ch.pipeline().addLast(new TestInboundHandler());
+			}
+		});
+		try {
+			serverBootstrap.bind(2222).sync();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("server start, listen port: 2222");
+	}
+	
+	private static void printDirectMemorySize() {
+
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				try {
+					Field field = PlatformDependent.class.getDeclaredField("DIRECT_MEMORY_COUNTER");
+					field.setAccessible(true);
+					System.out.println("directMem:" + field.get(PlatformDependent.class) + ", heap:" + Runtime.getRuntime().totalMemory());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}, 0, 1000);
+	}
+	
+	private static class TestInboundHandler extends ChannelInboundHandlerAdapter {
+	    @Override
+		public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+			try {
+				ByteBuf byteBuf = (ByteBuf) msg;
+				
+				StringBuilder sbuilder = new StringBuilder();
+				boolean isRl = false;
+				
+				while (byteBuf.isReadable()) {
+					byte b = byteBuf.readByte();
+					if (b == '\n' && !isRl) {
+						isRl = true;
+					} else if (b == '\n' && isRl) {
+						break;
+					}
+					sbuilder.append((char)b);
+				}
+				
+				// System.out.println(sbuilder);
+//				System.out.println("reveive msg.len=" + sbuilder.length());
+				
+				ByteBuf outByteBuf = ctx.alloc().buffer();
+				outByteBuf.writeBytes("HTTP/1.1 200 OK\nContent-Length: 9\n\n1234567890\n".getBytes());
+				ctx.writeAndFlush(outByteBuf);
+				
+			} finally {
+				ReferenceCountUtil.release(msg);
+			}
+		}
+	}
+}
